@@ -1,0 +1,28 @@
+#pragma once
+
+#include "io/serial.h"
+
+void panic(char* msg);
+
+void exc0();
+void exc1();
+void exc2();
+void exc3();
+void exc4();
+void exc5();
+void exc6();
+void exc7();
+void exc8();
+void exc9();
+void exc10();
+void exc11();
+void exc12();
+void exc13();
+void exc14();
+void exc15();
+void exc16();
+void exc17();
+void exc18();
+void exc19();
+void exc20();
+void exc30();

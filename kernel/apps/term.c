@@ -33,33 +33,66 @@ void term_printf(char* fmt, ...) {
 }
 
 void term_render(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
+  uint16_t start = x;
   color_t color = WHITE;
-  // draw_rect(16, 16, w, h, BLACK);
   for (uint32_t i = 0; term_buf[i]; i++) {
     switch (term_buf[i]) {
     case '\n':
       y += font->height;
       break;
     case '\r':
-      x = 16;
+      x = start;
       break;
     case '\e':
       i++;
       switch (term_buf[i]) {
-      case '0':
+      case 1:
         color = WHITE;
         break;
-      case '1':
+      case 2:
+        color = LIGHT_GRAY;
+        break;
+      case 3:
+        color = DARK_GRAY;
+        break;
+      case 4:
+        color = BLACK;
+        break;
+      case 5:
         color = RED;
         break;
-      case '2':
+      case 6:
+        color = ORANGE;
+        break;
+      case 7:
+        color = YELLOW;
+        break;
+      case 8:
+        color = LIME;
+        break;
+      case 9:
         color = GREEN;
         break;
-      case '3':
+      case 10:
+        color = GREEN_BLUE;
+        break;
+      case 11:
+        color = CYAN;
+        break;
+      case 12:
+        color = AZURE;
+        break;
+      case 13:
         color = BLUE;
         break;
-      case '4':
-        color = GRAY;
+      case 14:
+        color = PURPLE;
+        break;
+      case 15:
+        color = MAGENTA;
+        break;
+      case 16:
+        color = PINK;
         break;
       }
       break;
@@ -73,8 +106,19 @@ void term_render(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
   draw_str(x, y, buf, WHITE);
 }
 
+command_t cmds[] = {
+    {"help", "show a list of commands", help_command},
+    {"time", "show the current time", time_command},
+    {"fetch", "show system info", fetch_command},
+    {"cd", "change directory", cd_command},
+    {"ls", "list files", ls_command},
+    {"test", "test terminal features", test_command}};
+
 void help_command(char* args) {
-  term_print("commands: help, time, fetch\n\r");
+  term_print("commands:\n\r");
+  for (int i = 0; i < sizeof(cmds) / sizeof(command_t); i++) {
+    term_printf(WHITE_ "    %-6s " LIGHTGRAY_ "%s.\n\r", cmds[i].name, cmds[i].desc);
+  }
 }
 
 void time_command(char* args) {
@@ -84,10 +128,11 @@ void time_command(char* args) {
 
 void fetch_command(char* args) {
   term_print("                     root@cherry\n\r");
-  term_printf("\e2  __.--~~.,-.__      \e0os     \e4cherry %s\n\r", __cherry_version__);
-  term_printf("\e2  `~-._.-(`-.__`-.   \e0cpu    \e4%s\n\r", bootinfo.cpu_vendor);
-  term_printf("\e2          \\    `~~`  \e0mem    \e4%luMB\n\r", bootinfo.mem_usable / 1024 / 1024);
-  term_print("\e1     .--.\e2/ \\         \e0uptime \e4");
+  term_print(GREEN_ "  __.--~~.,-.__      " WHITE_ "os      " LIGHTGRAY_ "cherry "__cherry_version__
+                    "\n\r");
+  term_printf(GREEN_ "  `~-._.-(`-.__`-.   " WHITE_ "cpu     " LIGHTGRAY_ "%s\n\r", bootinfo.cpu_vendor);
+  term_printf(GREEN_ "          \\    `~~`  " WHITE_ "mem     " LIGHTGRAY_ "%luMB\n\r", bootinfo.mem_usable / 1024 / 1024);
+  term_print(RED_ "     .--." GREEN_ "/ \\         " WHITE_ "uptime  " LIGHTGRAY_);
   uint64_t minutes = ticks / 60000;
   uint64_t seconds = ticks / 1000 - minutes * 60;
   if (minutes) {
@@ -95,20 +140,47 @@ void fetch_command(char* args) {
   } else {
     term_printf("%lus\n\r", seconds);
   }
-  term_print("\e1    /#   \\  \e2\\\e1.--.    \n\r");
-  term_print("\e1    \\    /  /#   \\   \n\r");
-  term_print("\e1     '--'   \\    /   \n\r");
-  term_print("\e1             '--'    \n\r");
+  term_printf(RED_ "    /#   \\  " GREEN_ "\\" RED_ ".--.    " WHITE_ "display " LIGHTGRAY_ "%ix%i\n\r", fb->width, fb->height);
+  term_print(RED_ "    \\    /  /#   \\   \n\r");
+  term_print(RED_ "     '--'   \\    /   \n\r");
+  term_print(RED_ "             '--'    \n\r");
 }
 
-command_t cmds[] = {
-    {"help", help_command},
-    {"time", time_command},
-    {"fetch", fetch_command},
-};
+void cd_command(char* args) {
+  if (args) {
+    // verify
+    memcpy(term_dir, args, strlen(args));
+  } else {
+    term_print("cd: no directory provided.\n\r");
+  }
+}
+
+void ls_command(char* args) {
+  echfs_entry_t** entries = fs_list(fs_search_path(args ? args : term_dir));
+  for (int i = 0; entries[i]; i++) {
+    term_printf("%s ", entries[i]->name);
+  }
+  term_print("\n\r");
+}
+
+void test_command(char* args) {
+  for (int i = 1; i < 17; i++) {
+    term_printf("\e%c\4 ", i);
+  }
+  term_print(WHITE_ "\n\r");
+  for (int i = 0; i < 8; i++) {
+    for (int j = 1; j < 17; j++) {
+      char c = i * 16 + j;
+      if (c != 10 && c != 13) {
+        term_printf("%c ", c);
+      }
+    }
+    term_print("\n\r");
+  }
+}
 
 void term_run() {
-  term_printf("\e0%s>%s\n\r", term_dir, input_buf);
+  term_printf(WHITE_ "%s>%s\n\r", term_dir, input_buf);
   uint64_t cmd_end = strfind(input_buf, ' ');
   char* args = 0;
   if (cmd_end) {

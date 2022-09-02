@@ -7,16 +7,36 @@
 
 #define WHITE \
   (color_t) { .r = 255, .g = 255, .b = 255, .a = 255 }
+#define LIGHT_GRAY \
+  (color_t) { .r = 170, .g = 170, .b = 170, .a = 255 }
+#define DARK_GRAY \
+  (color_t) { .r = 85, .g = 85, .b = 85, .a = 255 }
 #define BLACK \
   (color_t) { .r = 0, .g = 0, .b = 0, .a = 255 }
 #define RED \
   (color_t) { .r = 255, .g = 0, .b = 0, .a = 255 }
+#define ORANGE \
+  (color_t) { .r = 255, .g = 128, .b = 0, .a = 255 }
+#define YELLOW \
+  (color_t) { .r = 255, .g = 255, .b = 0, .a = 255 }
+#define LIME \
+  (color_t) { .r = 128, .g = 255, .b = 0, .a = 255 }
 #define GREEN \
   (color_t) { .r = 0, .g = 255, .b = 0, .a = 255 }
+#define GREEN_BLUE \
+  (color_t) { .r = 0, .g = 255, .b = 128, .a = 255 }
+#define CYAN \
+  (color_t) { .r = 0, .g = 255, .b = 255, .a = 255 }
+#define AZURE \
+  (color_t) { .r = 0, .g = 128, .b = 255, .a = 255 }
 #define BLUE \
   (color_t) { .r = 0, .g = 0, .b = 255, .a = 255 }
-#define GRAY \
-  (color_t) { .r = 128, .g = 128, .b = 128, .a = 255 }
+#define PURPLE \
+  (color_t) { .r = 128, .g = 0, .b = 255, .a = 255 }
+#define MAGENTA \
+  (color_t) { .r = 255, .g = 0, .b = 255, .a = 255 }
+#define PINK \
+  (color_t) { .r = 255, .g = 0, .b = 128, .a = 255 }
 
 typedef struct {
   uint8_t b;

@@ -9,6 +9,7 @@ void _start(void) {
   init();
   term_init();
   term_print("Welcome to cherry os!\n\r");
+  term_print("Wallpaper by " LIGHTGRAY_ "Jeremy Bishop" WHITE_ ".\n\r");
   term_printf("Booted in %lums.\n\r", bootinfo.boot_ticks);
 
   image_t* img = (image_t*)fs_read(fs_search_path("root/wallpaper.img"));

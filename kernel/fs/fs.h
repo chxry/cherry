@@ -1,7 +1,6 @@
 #pragma once
 #include <stdint.h>
 
-#include "io/serial.h"
 #include "io/ata.h"
 #include "lib/mem.h"
 #include "lib/string.h"
@@ -35,4 +34,5 @@ typedef struct {
 void fs_init(uint64_t s);
 echfs_entry_t* fs_search_path(char* path);
 echfs_entry_t* fs_search(char* path, uint64_t parent);
-char* fs_read(echfs_entry_t* entry);
+char* fs_read(echfs_entry_t* file);
+echfs_entry_t** fs_list(echfs_entry_t* dir);

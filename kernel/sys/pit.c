@@ -7,10 +7,9 @@ void pit_init(uint16_t hz) {
   outb(0x43, 0x36);
   outb(0x40, divisor);
   outb(0x40, divisor >> 8);
-  logf("Initialized PIT.");
 }
 
-void pit_handler() {
+void __attribute__((interrupt)) pit_handler(void* frame) {
   ticks++;
   outb(0x20, 0x20);
 }

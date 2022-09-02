@@ -9,11 +9,12 @@ void ata_waitdrq() {
     ;
 }
 
-void ata_handler() {
+void __attribute__((interrupt)) ata_handler(void* frame) {
   outb(0x20, 0x20);
 }
 
 void ata_read_sectors(uint8_t* buf, uint32_t block, uint8_t sectors) {
+  logf("%i from %lu -> %p", sectors, block, buf);
   ata_waitbsy();
 
   outb(0x1F6, 0xE0 | ((block >> 24) & 0xF));
@@ -45,8 +46,6 @@ void ata_write_sectors(uint8_t* buf, uint32_t block, uint8_t sectors) {
   outb(0x1F4, (uint8_t)(block >> 8));
   outb(0x1F5, (uint8_t)(block >> 16));
   outb(0x1F7, 0x30);
-
-  uint16_t* target = (uint16_t*)buf;
 
   for (int j = 0; j < sectors; j++) {
     ata_waitbsy();

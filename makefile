@@ -14,7 +14,8 @@ ECHO = echo -e "\033[1m$(1) \033[0m$(2)"
 
 run: $(HDD)
 	$(call ECHO,"running",$(HDD))
-	qemu-system-x86_64 --enable-kvm -serial stdio -cpu host -m 4G -drive format=raw,file=$(HDD)
+#	qemu-system-x86_64 --enable-kvm -cpu host -serial stdio -m 4G -drive file=$(HDD),format=raw
+	qemu-system-x86_64 -serial stdio -m 4G -drive file=$(HDD),format=raw
 
 $(HDD): $(KERNEL)
 	$(call ECHO,"creating",$(HDD))

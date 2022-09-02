@@ -29,5 +29,4 @@ void gdt_init() {
       :
       :
       : "rax", "memory");
-  logf("Loaded GDT.");
 }

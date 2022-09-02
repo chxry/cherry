@@ -1,7 +1,5 @@
 #include "kb.h"
 
-extern char input_buf[128];
-
 bool caps = false;
 uint8_t scancodes[] = {
     0, 0, '1', '2',
@@ -20,20 +18,20 @@ uint8_t scancodes[] = {
     '.', '/', 0, '*',
     0, ' '};
 
-
-void kb_handler() {
+void __attribute__((interrupt)) kb_handler(void* frame) {
   uint8_t chr = inb(0x60);
   if (chr < 0x3A) {
     uint8_t scancode = scancodes[chr];
     int n = strlen(input_buf);
     input_buf[n] = caps ? scancode - 32 : scancode;
-    input_buf[n+1] = 0;
+    input_buf[n + 1] = 0;
   } else {
     switch (chr) {
     case 0x9c: // enter
+      term_run();
       break;
     case 0x8E: // backspace
-      input_buf[strlen(input_buf)-1] = 0;
+      input_buf[strlen(input_buf) - 1] = 0;
       break;
     case 0xBA: // caps
       caps = !caps;

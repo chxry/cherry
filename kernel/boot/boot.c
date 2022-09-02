@@ -11,7 +11,7 @@ void init() {
   bootinfo.mem_usable = mm_init();
 
   uint8_t table[512];
-  ata_read_sectors(table,2,1);
+  ata_read_sectors(table, 2, 1);
   gpt_entry_t* entry = (gpt_entry_t*)table;
   fs_init(entry->start);
   fb_init();
@@ -23,6 +23,8 @@ void init() {
   memcpy(bootinfo.cpu_vendor + 8, &ecx, 4);
   bootinfo.cpu_vendor[12] = '\0';
 
-  logf("cherryos %s booted!", __cherry_version__);
-  logf("copyright (c) chxry 2022.");
+  bootinfo.boot_ticks = ticks;
+  logf("cherryos "__cherry_version__
+       " booted in %ims.",
+       bootinfo.boot_ticks);
 }

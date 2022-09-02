@@ -1,8 +1,6 @@
 #pragma once
 #include <stdint.h>
 
-#include "io/serial.h"
-
 typedef struct {
   uint16_t limit_low16;
   uint16_t base_low16;

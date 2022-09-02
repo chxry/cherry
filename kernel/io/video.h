@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <limine/limine.h>
 
+#include "fs/fs.h"
 #include "lib/mem.h"
 
 #define WHITE \
@@ -14,6 +15,8 @@
   (color_t) { .r = 0, .g = 255, .b = 0, .a = 255 }
 #define BLUE \
   (color_t) { .r = 0, .g = 0, .b = 255, .a = 255 }
+#define GRAY \
+  (color_t) { .r = 128, .g = 128, .b = 128, .a = 255 }
 
 typedef struct {
   uint8_t b;
@@ -34,14 +37,21 @@ typedef struct {
   uint8_t data[];
 } __attribute__((packed)) psf_t;
 
+typedef struct {
+  int w;
+  int h;
+  color_t data;
+} __attribute__((packed)) image_t;
+
 extern volatile struct limine_framebuffer_request fb_request;
 #define fb fb_request.response->framebuffers[0]
 
-extern psf_t font;
+extern psf_t* font;
 
 void fb_init();
 void draw_px(uint16_t x, uint16_t y, color_t color);
 void draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, color_t color);
 void draw_char(uint16_t x, uint16_t y, char c, color_t color);
 void draw_str(uint16_t x, uint16_t y, char* str, color_t color);
+void draw_image(uint16_t x, uint16_t y, image_t* img);
 void fb_render();

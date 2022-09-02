@@ -5,7 +5,7 @@ void* malloc(uint64_t len) {
 }
 
 void* calloc(uint64_t len) {
-  return ta_calloc(len,1);
+  return ta_calloc(len, 1);
 }
 
 void free(void* ptr) {

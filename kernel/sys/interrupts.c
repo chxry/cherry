@@ -3,10 +3,6 @@
 idt_desc_t idt[256];
 idt_pointer_t idtr = {.size = 256 * sizeof(idt_desc_t), .addr = (uint64_t)idt};
 
-extern void irq0();
-extern void irq1();
-extern void irq14();
-
 void pic_remap(uint8_t pic1, uint8_t pic2) {
   outb(PIC1, ICW1);
   outb(PIC2, ICW1);
@@ -19,7 +15,6 @@ void pic_remap(uint8_t pic1, uint8_t pic2) {
 
   outb(PIC1 + 1, ICW4);
   outb(PIC2 + 1, ICW4);
-  logf("Remapped PIC.");
 }
 
 void idt_init() {
@@ -44,15 +39,14 @@ void idt_init() {
   idt[19] = idt_make_entry((uint64_t)&exc19);
   idt[20] = idt_make_entry((uint64_t)&exc20);
   idt[30] = idt_make_entry((uint64_t)&exc30);
-  idt[32] = idt_make_entry((uint64_t)&irq0);
-  idt[33] = idt_make_entry((uint64_t)&irq1);
-  idt[46] = idt_make_entry((uint64_t)&irq14);
+  idt[32] = idt_make_entry((uint64_t)&pit_handler);
+  idt[33] = idt_make_entry((uint64_t)&kb_handler);
+  idt[46] = idt_make_entry((uint64_t)&ata_handler);
 
   asm volatile("lidt %0"
                :
                : "m"(idtr));
   asm volatile("sti");
-  logf("Loaded IDT.");
 }
 
 idt_desc_t idt_make_entry(uint64_t offset) {

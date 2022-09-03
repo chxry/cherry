@@ -1,9 +1,9 @@
 #include "boot/boot.h"
 #include "io/video.h"
+#include "sys/pit.h"
+#include "user/prog.h"
 #include "apps/term.h"
 #include "apps/bar.h"
-
-#include "sys/pit.h"
 
 void _start(void) {
   init();
@@ -11,8 +11,8 @@ void _start(void) {
   term_print("Welcome to cherry os!\n\r");
   term_print("Wallpaper by " LIGHTGRAY_ "Jeremy Bishop" WHITE_ ".\n\r");
   term_printf("Booted in %lums.\n\r", bootinfo.boot_ticks);
-
   image_t* img = (image_t*)fs_read(fs_search_path("root/wallpaper.img"));
+  prog_exec("root/test.o");
 
   for (;;) {
     draw_image(0, 0, img);

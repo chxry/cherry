@@ -18,7 +18,7 @@ uint8_t scancodes[] = {
     '.', '/', 0, '*',
     0, ' '};
 
-void __attribute__((interrupt)) kb_handler(void* frame) {
+void __attribute__((interrupt)) kb_handler(frame_t* frame) {
   uint8_t chr = inb(0x60);
   if (chr < 0x3A) {
     uint8_t scancode = scancodes[chr];

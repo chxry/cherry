@@ -42,6 +42,7 @@ void idt_init() {
   idt[32] = idt_make_entry((uint64_t)&pit_handler);
   idt[33] = idt_make_entry((uint64_t)&kb_handler);
   idt[46] = idt_make_entry((uint64_t)&ata_handler);
+  idt[128] = idt_make_entry((uint64_t)&syscall_handler);
 
   asm volatile("lidt %0"
                :
@@ -56,6 +57,5 @@ idt_desc_t idt_make_entry(uint64_t offset) {
       .offset_mid = (offset >> 16) & 0xFFFF,
       .offset_hi = (offset >> 32) & 0xFFFFFFFF,
       .ist = 0,
-      .zero = 0,
       .type_attr = 0x8e};
 }

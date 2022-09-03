@@ -53,45 +53,48 @@ void term_render(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
         color = LIGHT_GRAY;
         break;
       case 3:
-        color = DARK_GRAY;
+        color = GRAY;
         break;
       case 4:
-        color = BLACK;
+        color = DARK_GRAY;
         break;
       case 5:
-        color = RED;
+        color = BLACK;
         break;
       case 6:
-        color = ORANGE;
+        color = RED;
         break;
       case 7:
-        color = YELLOW;
+        color = ORANGE;
         break;
       case 8:
-        color = LIME;
+        color = YELLOW;
         break;
       case 9:
-        color = GREEN;
+        color = LIME;
         break;
       case 10:
-        color = GREEN_BLUE;
+        color = GREEN;
         break;
       case 11:
-        color = CYAN;
+        color = GREEN_BLUE;
         break;
       case 12:
-        color = AZURE;
+        color = CYAN;
         break;
       case 13:
-        color = BLUE;
+        color = AZURE;
         break;
       case 14:
-        color = PURPLE;
+        color = BLUE;
         break;
       case 15:
-        color = MAGENTA;
+        color = PURPLE;
         break;
       case 16:
+        color = MAGENTA;
+        break;
+      case 17:
         color = PINK;
         break;
       }
@@ -164,16 +167,14 @@ void ls_command(char* args) {
 }
 
 void test_command(char* args) {
-  for (int i = 1; i < 17; i++) {
+  for (int i = 1; i < 18; i++) {
     term_printf("\e%c\4 ", i);
   }
   term_print(WHITE_ "\n\r");
   for (int i = 0; i < 8; i++) {
-    for (int j = 1; j < 17; j++) {
-      char c = i * 16 + j;
-      if (c != 10 && c != 13) {
-        term_printf("%c ", c);
-      }
+    for (int j = 1; j < 18; j++) {
+      char c = i * 17 + j;
+      term_printf("%c ", c != 10 && c != 13 ? c : ' ');
     }
     term_print("\n\r");
   }

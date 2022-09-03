@@ -9,7 +9,7 @@ void ata_waitdrq() {
     ;
 }
 
-void __attribute__((interrupt)) ata_handler(void* frame) {
+void __attribute__((interrupt)) ata_handler(frame_t* frame) {
   outb(0x20, 0x20);
 }
 

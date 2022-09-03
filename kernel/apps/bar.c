@@ -2,7 +2,7 @@
 
 void bar_render() {
   time_t time = get_time();
-  draw_rect(0, 0, fb->width, 16, (color_t){20, 20, 20});
+  draw_rect(0, 0, fb->width, 16, DARK_GRAY);
   draw_char(8, 0, 3, RED);
   draw_str(24, 0, "cherry os "__cherry_version__, WHITE);
   char time_buf[20];

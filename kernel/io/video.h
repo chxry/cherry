@@ -8,9 +8,11 @@
 #define WHITE \
   (color_t) { .r = 255, .g = 255, .b = 255, .a = 255 }
 #define LIGHT_GRAY \
-  (color_t) { .r = 170, .g = 170, .b = 170, .a = 255 }
+  (color_t) { .r = 224, .g = 224, .b = 224, .a = 255 }
+#define GRAY \
+  (color_t) { .r = 128, .g = 128, .b = 128, .a = 255 }
 #define DARK_GRAY \
-  (color_t) { .r = 85, .g = 85, .b = 85, .a = 255 }
+  (color_t) { .r = 32, .g = 32, .b = 32, .a = 255 }
 #define BLACK \
   (color_t) { .r = 0, .g = 0, .b = 0, .a = 255 }
 #define RED \

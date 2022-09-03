@@ -1,11 +1,12 @@
 HDD = build/cherry.hdd
 KERNEL = build/kernel.elf
-VERSION = 0.1.0
+VERSION = 0.1.1
 
 SRC = $(shell find kernel/ -type f -name '*.[cs]') lib/tinyalloc/tinyalloc.c
 OBJS = $(SRC:=.o)
 
 CFLAGS = -c -ffreestanding -fno-stack-protector -fno-stack-check -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -D__cherry_version__=\"$(VERSION)\"
+CFLAGS += -Wall -Wextra -Wno-interrupt-service-routine -Wno-int-conversion -Wno-sign-compare -Wno-unused-parameter
 CFLAGS += -Ikernel -Ilib 
 LDFLAGS = -Tmeta/linker.ld -nostdlib
 ASFLAGS = -felf64
@@ -17,7 +18,7 @@ run: $(HDD)
 #	qemu-system-x86_64 --enable-kvm -cpu host -serial stdio -m 4G -drive file=$(HDD),format=raw
 	qemu-system-x86_64 -serial stdio -m 4G -drive file=$(HDD),format=raw
 
-$(HDD): $(KERNEL)
+$(HDD): $(KERNEL) root/test.o
 	$(call ECHO,"creating",$(HDD))
 	make -C lib/limine limine-deploy
 	make -C lib/echfs echfs-utils
@@ -36,6 +37,10 @@ $(KERNEL): $(OBJS)
 	$(call ECHO,"linking",$(KERNEL))
 	mkdir -p build
 	ld.lld $(OBJS) $(LDFLAGS) -o $@
+
+root/test.o: apps/test.c.o
+	$(call ECHO,"linking",$@)
+	ld --oformat binary $< -o $@
 
 %.c.o: %.c
 	$(call ECHO,"clang",$<)

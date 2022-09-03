@@ -25,7 +25,6 @@ void draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, color_t color) {
 }
 
 void draw_char(uint16_t x, uint16_t y, char c, color_t color) {
-  color_t* buf = fb->address;
   uint8_t* glyph = &font->data[c * font->glyph_size];
   uint8_t masks[8] = {128, 64, 32, 16, 8, 4, 2, 1};
 

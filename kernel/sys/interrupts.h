@@ -1,9 +1,19 @@
 #pragma once
 #include <stdint.h>
 
+typedef struct {
+  uint64_t rip;
+  uint64_t cs;
+  uint64_t rflags;
+  uint64_t rsp;
+  uint64_t ss;
+} __attribute__((__packed__)) frame_t;
+
+#include "io/serial.h"
 #include "io/io.h"
 #include "io/kb.h"
 #include "sys/pit.h"
+#include "user/syscall.h"
 #include "panic.h"
 
 #define PIC1 0x20
@@ -18,7 +28,7 @@ typedef struct {
   uint8_t type_attr;
   uint16_t offset_mid;
   uint32_t offset_hi;
-  uint32_t zero;
+  uint32_t _;
 } __attribute__((packed)) idt_desc_t;
 
 typedef struct {

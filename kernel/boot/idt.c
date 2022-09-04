@@ -1,4 +1,4 @@
-#include "interrupts.h"
+#include "idt.h"
 
 idt_desc_t idt[256];
 idt_pointer_t idtr = {.size = 256 * sizeof(idt_desc_t), .addr = (uint64_t)idt};

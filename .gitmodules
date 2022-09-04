@@ -1,13 +1,13 @@
-[submodule "lib/limine"]
-	path = lib/limine
+[submodule "vendor/limine"]
+	path = vendor/limine
 	url = https://github.com/limine-bootloader/limine
-  branch = v3.0-branch-binary
-[submodule "lib/stb"]
-	path = lib/stb
-	url = https://github.com/nothings/stb
-[submodule "lib/tinyalloc"]
-	path = lib/tinyalloc
-	url = https://github.com/thi-ng/tinyalloc
-[submodule "lib/echfs"]
-	path = lib/echfs
+	branch = v3.0-branch-binary
+[submodule "vendor/echfs"]
+	path = vendor/echfs
 	url = https://github.com/echfs/echfs
+[submodule "vendor/stb"]
+	path = vendor/stb
+	url = https://github.com/nothings/stb
+[submodule "vendor/tinyalloc"]
+	path = vendor/tinyalloc
+	url = https://github.com/thi-ng/tinyalloc

@@ -3,23 +3,26 @@
 char* term_buf;
 char term_dir[512] = "root";
 char input_buf[512] = "";
+echfs_entry_t** apps;
 
 void term_init() {
-  term_buf = malloc(1);
+  term_buf = kmalloc(1);
   term_buf[0] = 0;
+  apps = fs_list(fs_search_path("apps"));
 }
 
 void term_clear() {
-  free(term_buf);
-  term_init();
+  kfree(term_buf);
+  term_buf = kmalloc(1);
+  term_buf[0] = 0;
 }
 
 void term_print(char* str) {
-  char* new = malloc(strlen(term_buf) + strlen(str) + 1);
+  char* new = kmalloc(strlen(term_buf) + strlen(str) + 1);
   memcpy(new, term_buf, strlen(term_buf));
   memcpy(new + strlen(term_buf), str, strlen(str));
   new[strlen(term_buf) + strlen(str)] = 0;
-  free(term_buf);
+  kfree(term_buf);
   term_buf = new;
 }
 
@@ -114,13 +117,12 @@ command_t cmds[] = {
     {"time", "show the current time", time_command},
     {"fetch", "show system info", fetch_command},
     {"cd", "change directory", cd_command},
-    {"ls", "list files", ls_command},
-    {"test", "test terminal features", test_command}};
+    {"ls", "list files", ls_command}};
 
 void help_command(char* args) {
   term_print("commands:\n\r");
   for (int i = 0; i < sizeof(cmds) / sizeof(command_t); i++) {
-    term_printf(WHITE_ "    %-6s " LIGHTGRAY_ "%s.\n\r", cmds[i].name, cmds[i].desc);
+    term_printf(WHITE_ "    %-6s " GRAY_ "%s.\n\r", cmds[i].name, cmds[i].desc);
   }
 }
 
@@ -166,20 +168,6 @@ void ls_command(char* args) {
   term_print("\n\r");
 }
 
-void test_command(char* args) {
-  for (int i = 1; i < 18; i++) {
-    term_printf("\e%c\4 ", i);
-  }
-  term_print(WHITE_ "\n\r");
-  for (int i = 0; i < 8; i++) {
-    for (int j = 1; j < 18; j++) {
-      char c = i * 17 + j;
-      term_printf("%c ", c != 10 && c != 13 ? c : ' ');
-    }
-    term_print("\n\r");
-  }
-}
-
 void term_run() {
   term_printf(WHITE_ "%s>%s\n\r", term_dir, input_buf);
   uint64_t cmd_end = strfind(input_buf, ' ');
@@ -191,6 +179,12 @@ void term_run() {
   for (int i = 0; i < sizeof(cmds) / sizeof(command_t); i++) {
     if (strcmp(input_buf, cmds[i].name)) {
       cmds[i].func(args);
+      goto end;
+    }
+  }
+  for (int i = 0; apps[i]; i++) {
+    if (strcmp(input_buf, apps[i]->name)) {
+      prog_exec_file(apps[i]);
       goto end;
     }
   }

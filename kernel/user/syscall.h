@@ -1,8 +1,8 @@
 #pragma once
 #include <stdint.h>
-#include <tinyalloc/tinyalloc.h>
 
-#include "sys/interrupts.h"
+#include "sys/mm.h"
+#include "boot/idt.h"
 
 #define RETURN(x) asm volatile("mov %0,%%rax" ::"a"(x))
 

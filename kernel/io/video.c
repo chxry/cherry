@@ -9,7 +9,7 @@ color_t* fbuf;
 
 void fb_init() {
   font = (psf_t*)fs_read(fs_search_path("root/goha16.psfu"));
-  fbuf = calloc(fb->width * fb->height * sizeof(color_t));
+  fbuf = kcalloc(fb->width * fb->height * sizeof(color_t));
 }
 
 void draw_px(uint16_t x, uint16_t y, color_t color) {

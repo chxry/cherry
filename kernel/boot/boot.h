@@ -2,15 +2,15 @@
 #include <stdint.h>
 #include <cpuid.h>
 
-#include "sys/interrupts.h"
+#include "boot/idt.h"
 #include "sys/pit.h"
 #include "sys/mm.h"
 #include "fs/fs.h"
 #include "io/serial.h"
 #include "io/video.h"
 #include "io/ata.h"
-#include "lib/mem.h"
 #include "gdt.h"
+#include "mem.h"
 
 typedef struct {
   uint64_t type[2];

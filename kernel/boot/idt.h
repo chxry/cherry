@@ -13,8 +13,8 @@ typedef struct {
 #include "io/io.h"
 #include "io/kb.h"
 #include "sys/pit.h"
+#include "sys/panic.h"
 #include "user/syscall.h"
-#include "panic.h"
 
 #define PIC1 0x20
 #define PIC2 0xA0

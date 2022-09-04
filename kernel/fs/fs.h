@@ -1,10 +1,6 @@
 #pragma once
 #include <stdint.h>
 
-#include "io/ata.h"
-#include "lib/mem.h"
-#include "lib/string.h"
-
 typedef struct {
   uint32_t _;
   char signature[8];
@@ -28,6 +24,11 @@ typedef struct {
   uint64_t block;
   uint64_t size;
 } __attribute__((packed)) echfs_entry_t;
+
+#include "io/ata.h"
+#include "sys/mm.h"
+#include "mem.h"
+#include "string.h"
 
 #define ROOT_ID 0xffffffffffffffff
 

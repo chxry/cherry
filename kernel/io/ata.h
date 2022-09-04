@@ -1,8 +1,8 @@
 #pragma once
 #include <stdint.h>
 
+#include "boot/idt.h"
 #include "io.h"
-#include "sys/interrupts.h"
 
 #define STATUS_BSY 0x80
 #define STATUS_RDY 0x40

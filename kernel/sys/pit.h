@@ -1,8 +1,8 @@
 #pragma once
 #include <stdint.h>
 
+#include "boot/idt.h"
 #include "io/io.h"
-#include "sys/interrupts.h"
 
 #define PIT_FREQ 1193181
 

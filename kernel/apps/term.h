@@ -4,12 +4,10 @@
 
 #include "boot/boot.h"
 #include "io/video.h"
-#include "sys/time.h"
-#include "sys/pit.h"
 #include "fs/fs.h"
 #include "user/prog.h"
-#include "mem.h"
-#include "string.h"
+#include "lib/mem.h"
+#include "lib/string.h"
 
 extern char input_buf[512];
 

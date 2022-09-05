@@ -4,7 +4,7 @@
 
 #include "fs/fs.h"
 #include "sys/mm.h"
-#include "mem.h"
+#include "lib/mem.h"
 
 #define WHITE \
   (color_t) { .r = 255, .g = 255, .b = 255, .a = 255 }

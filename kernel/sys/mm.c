@@ -25,6 +25,6 @@ uint64_t mm_init() {
     }
   }
   struct limine_memmap_entry* largest = mmap->entries[l];
-  ta_init((void*)largest->base, largest->base + largest->length, 256, 16, 8);
+  ta_init((void*)largest->base, (void*)(largest->base + largest->length), 256, 16, 8);
   return largest->length;
 }

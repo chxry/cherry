@@ -27,8 +27,8 @@ typedef struct {
 
 #include "io/ata.h"
 #include "sys/mm.h"
-#include "mem.h"
-#include "string.h"
+#include "lib/mem.h"
+#include "lib/string.h"
 
 #define ROOT_ID 0xffffffffffffffff
 

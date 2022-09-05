@@ -13,6 +13,7 @@ void init() {
   uint8_t table[512];
   ata_read_sectors(table, 2, 1);
   gpt_entry_t* entry = (gpt_entry_t*)table;
+  bootinfo.disk_size = (entry->end - entry->start) * 512;
   fs_init(entry->start);
   fb_init();
 

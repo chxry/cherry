@@ -114,7 +114,6 @@ void term_render(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
 
 command_t cmds[] = {
     {"help", "show a list of commands", help_command},
-    {"time", "show the current time", time_command},
     {"fetch", "show system info", fetch_command},
     {"cd", "change directory", cd_command},
     {"ls", "list files", ls_command}};
@@ -126,18 +125,13 @@ void help_command(char* args) {
   }
 }
 
-void time_command(char* args) {
-  time_t time = get_time();
-  term_printf("%02i:%02i:%02i %02i/%02i/%i\n\r", time.hour, time.minute, time.second, time.day, time.month, time.year);
-}
-
 void fetch_command(char* args) {
   term_print("                     root@cherry\n\r");
-  term_print(GREEN_ "  __.--~~.,-.__      " WHITE_ "os      " LIGHTGRAY_ "cherry "__cherry_version__
+  term_print(GREEN_ "  __.--~~.,-.__      " WHITE_ "os      " GRAY_ "cherry "__cherry_version__
                     "\n\r");
-  term_printf(GREEN_ "  `~-._.-(`-.__`-.   " WHITE_ "cpu     " LIGHTGRAY_ "%s\n\r", bootinfo.cpu_vendor);
-  term_printf(GREEN_ "          \\    `~~`  " WHITE_ "mem     " LIGHTGRAY_ "%luMB\n\r", bootinfo.mem_usable / 1024 / 1024);
-  term_print(RED_ "     .--." GREEN_ "/ \\         " WHITE_ "uptime  " LIGHTGRAY_);
+  term_printf(GREEN_ "  `~-._.-(`-.__`-.   " WHITE_ "cpu     " GRAY_ "%s\n\r", bootinfo.cpu_vendor);
+  term_printf(GREEN_ "          \\    `~~`  " WHITE_ "mem     " GRAY_ "%luMB\n\r", bootinfo.mem_usable / 1024 / 1024);
+  term_print(RED_ "     .--." GREEN_ "/ \\         " WHITE_ "uptime  " GRAY_);
   uint64_t minutes = ticks / 60000;
   uint64_t seconds = ticks / 1000 - minutes * 60;
   if (minutes) {
@@ -145,8 +139,8 @@ void fetch_command(char* args) {
   } else {
     term_printf("%lus\n\r", seconds);
   }
-  term_printf(RED_ "    /#   \\  " GREEN_ "\\" RED_ ".--.    " WHITE_ "display " LIGHTGRAY_ "%ix%i\n\r", fb->width, fb->height);
-  term_print(RED_ "    \\    /  /#   \\   \n\r");
+  term_printf(RED_ "    /#   \\  " GREEN_ "\\" RED_ ".--.    " WHITE_ "display " GRAY_ "%ix%i\n\r", fb->width, fb->height);
+  term_printf(RED_ "    \\    /  /#   \\   " WHITE_ "disk   " GRAY_ "%luMB\n\r", bootinfo.disk_size / 1024 / 1024);
   term_print(RED_ "     '--'   \\    /   \n\r");
   term_print(RED_ "             '--'    \n\r");
 }

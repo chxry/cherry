@@ -5,6 +5,6 @@
 
 #include "syscall.h"
 
-#define print(str) syscall1(str, 1)
+#define print(str) (void)syscall1((uint64_t)str, 1)
 
 void printf(char* fmt, ...);

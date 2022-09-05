@@ -24,6 +24,7 @@ typedef struct {
 typedef struct {
   uint64_t mem_usable;
   char cpu_vendor[13];
+  uint64_t disk_size;
   uint64_t boot_ticks;
 } bootinfo_t;
 

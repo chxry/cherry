@@ -1,8 +1,10 @@
 #![no_std]
 #![no_main]
+#![feature(riscv_ext_intrinsics)]
 use core::fmt;
-use core::arch::{asm, global_asm};
+use core::arch::{global_asm, asm, riscv64};
 use core::panic::PanicInfo;
+use fdt::Fdt;
 
 global_asm!(include_str!("boot.s"));
 
@@ -10,13 +12,26 @@ const UART_BASE: *mut u8 = 0x10000000 as _;
 
 #[unsafe(no_mangle)]
 extern "C" fn kmain() -> ! {
+  let fdt_addr = read_reg!(a1);
+  let fdt = unsafe { Fdt::from_ptr(fdt_addr as _).unwrap() };
+
   kprintln!("cherry {}", 2);
+  kprintln!("model = {}", fdt.root().model());
+  for m in fdt.memory().regions() {
+    kprintln!("{:p} {:?}", m.starting_address, m.size);
+  }
+
   loop {
     if Uart.data_avail() {
       Uart.put(Uart.read());
     }
   }
 }
+
+// need alloc for this rabbit hole
+// trait Driver {
+//   fn compat(s: &str) -> bool;
+// }
 
 struct Uart;
 
@@ -64,6 +79,17 @@ macro_rules! kprintln {
   });
 }
 
+#[macro_export]
+macro_rules! read_reg {
+  ($r:ident) => (
+    unsafe {
+      let x: usize;
+      asm!("mv {}, a1", out(reg) x);
+      x
+    }
+  );
+}
+
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
   kprintln!("KERNEL PANIC!\n{}", info);
@@ -73,7 +99,7 @@ fn panic(info: &PanicInfo) -> ! {
 fn abort() -> ! {
   loop {
     unsafe {
-      asm!("wfi");
+      riscv64::wfi();
     }
   }
 }

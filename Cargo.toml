@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 fdt = "0.1"
+bitflags = "2.9"

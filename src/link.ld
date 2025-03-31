@@ -2,12 +2,14 @@ ENTRY(_start)
 
 SECTIONS {
     . = 0x80200000;
+    _kernel_start = .;
 
     .text : {
         KEEP(*(.text.init));
         *(.text .text.*);
     }
-
+    
+    _global_pointer = .;
     .rodata : ALIGN(4) {
         *(.rodata .rodata.*);
     }
@@ -17,7 +19,7 @@ SECTIONS {
     }
 
     .bss : ALIGN(4) {
-        _bss = .;
+        _bss_start = .;
         *(.bss .bss.* .sbss .sbss.*);
         _bss_end = .;
     }
@@ -25,4 +27,6 @@ SECTIONS {
     . = ALIGN(4);
     . += 128 * 1024;
     _stack_top = .;
+    . = ALIGN(4096);
+    _heap_start = .;
 }

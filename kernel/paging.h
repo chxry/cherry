@@ -14,6 +14,8 @@
 typedef size_t pte_t;
 typedef pte_t* pagetable_t;
 
+extern pagetable_t root_pagetable;
+
 void paging_init(void);
 void paging_map_page(pagetable_t pagetable, size_t va, size_t pa, size_t flags);
 void paging_identity_map_range(pagetable_t pagetable, size_t start, size_t end, size_t flags);

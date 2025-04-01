@@ -1,9 +1,10 @@
 #include "paging.h"
 #include "printf.h"
-
 #include "lib/mem.h"
 
 extern char _kernel_start, _heap_start;
+
+pagetable_t root_pagetable;
 
 void* alloc_page(void) {
   static void* next = &_heap_start;
@@ -14,16 +15,17 @@ void* alloc_page(void) {
 }
 
 void paging_init(void) {
-  pagetable_t root = alloc_page();
+  root_pagetable = alloc_page();
 
-  paging_identity_map_range(root, (size_t)&_kernel_start, (size_t)&_heap_start, PTE_READ | PTE_WRITE | PTE_EXECUTE);
-  paging_identity_map_range(root, 0x10000000, 0x10001000, PTE_READ | PTE_WRITE);
-  // paging_print_pagetable(root, 2, 0);
+  paging_identity_map_range(root_pagetable, (size_t)&_kernel_start, (size_t)&_heap_start, PTE_READ | PTE_WRITE | PTE_EXECUTE);
+  // find a better solution for mapping the heap
+  paging_identity_map_range(root_pagetable, (size_t)&_heap_start, (size_t)&_heap_start + PAGE_SIZE * 1024, PTE_READ | PTE_WRITE);
+  // paging_print_pagetable(root_pagetable, 2, 0);
 
-  size_t satp_value = SATP_SV39 | ((size_t)root >> 12);
+  size_t satp_value = SATP_SV39 | ((size_t)root_pagetable >> 12);
   asm volatile("csrw satp, %0" :: "r"(satp_value));
   asm volatile("sfence.vma");
-  kprintf("paged!");
+  kprintf("paged!\n");
 }
 
 void paging_map_page(pagetable_t pagetable, size_t va, size_t pa, size_t flags) {
@@ -42,9 +44,8 @@ void paging_map_page(pagetable_t pagetable, size_t va, size_t pa, size_t flags) 
 }
 
 void paging_identity_map_range(pagetable_t pagetable, size_t start, size_t end, size_t flags) {
-  for (size_t addr = start; addr < end; addr += PAGE_SIZE) {
+  for (size_t addr = start; addr < end; addr += PAGE_SIZE)
     paging_map_page(pagetable, addr, addr, flags);
-  }
 }
 
 void paging_print_pagetable(pagetable_t pagetable, int level, size_t va_base) {

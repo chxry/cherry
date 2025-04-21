@@ -19,4 +19,6 @@ extern pagetable_t root_pagetable;
 void paging_init(void);
 void paging_map_page(pagetable_t pagetable, size_t va, size_t pa, size_t flags);
 void paging_identity_map_range(pagetable_t pagetable, size_t start, size_t end, size_t flags);
-void paging_print_pagetable(pagetable_t pagetable, int level, size_t va_base);
+void paging_print_pagetable(const pagetable_t pagetable, int level, size_t va_base);
+void* paging_alloc(size_t n);
+void* kmalloc(size_t size);

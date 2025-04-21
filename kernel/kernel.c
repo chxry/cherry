@@ -20,8 +20,15 @@ void kmain(size_t hart_id, size_t fdt_addr) {
   paging_init();
   paging_identity_map_range(root_pagetable, fdt_addr, fdt_addr + fdt_size, PTE_READ);
 
-  fdt_dump(fdt_header);
+  // int* addr = kmalloc(512);
+  // addr[3] = 123;
+  // kprintf("%p %d\n", addr, addr[3]);
 
+  // paging_print_pagetable(root_pagetable, 2, 0);
+  // fdt_dump(fdt_header);
+  uint8_t* test = fdt_find_by_prop(fdt_header, "compatible", (uint8_t*)"ns16550a", 9);
+  kprintf("test: %p\n", test);
+ 
   abort();
 }
 

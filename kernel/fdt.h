@@ -23,4 +23,5 @@ typedef struct {
 } fdt_header_t;
 
 fdt_header_t* fdt_parse_header(size_t fdt_addr);
-void fdt_dump(fdt_header_t* header);
+uint8_t* fdt_find_by_prop(const fdt_header_t* header, const char* prop_name, const uint8_t* prop_val, uint32_t prop_len);
+void fdt_dump(const fdt_header_t* header);

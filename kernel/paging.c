@@ -6,21 +6,12 @@ extern char _kernel_start, _heap_start;
 
 pagetable_t root_pagetable;
 
-void* alloc_page(void) {
-  static void* next = &_heap_start;
-  void* addr = next;
-  memset(addr, 0, PAGE_SIZE);
-  next += PAGE_SIZE;
-  return addr;
-}
-
 void paging_init(void) {
-  root_pagetable = alloc_page();
+  root_pagetable = paging_alloc(1);
 
   paging_identity_map_range(root_pagetable, (size_t)&_kernel_start, (size_t)&_heap_start, PTE_READ | PTE_WRITE | PTE_EXECUTE);
   // find a better solution for mapping the heap
   paging_identity_map_range(root_pagetable, (size_t)&_heap_start, (size_t)&_heap_start + PAGE_SIZE * 1024, PTE_READ | PTE_WRITE);
-  // paging_print_pagetable(root_pagetable, 2, 0);
 
   size_t satp_value = SATP_SV39 | ((size_t)root_pagetable >> 12);
   asm volatile("csrw satp, %0" :: "r"(satp_value));
@@ -33,7 +24,7 @@ void paging_map_page(pagetable_t pagetable, size_t va, size_t pa, size_t flags) 
     size_t index = (va >> (12 + level * 9)) & 0x1ff;
 
     if (!(pagetable[index] & PTE_VALID)) {
-      pte_t* new_page = alloc_page();
+      pte_t* new_page = paging_alloc(1);
       pagetable[index] = (((size_t)new_page >> 12) << 10) | PTE_VALID;
     }
     pagetable = (pagetable_t)((pagetable[index] >> 10) << 12);
@@ -48,7 +39,7 @@ void paging_identity_map_range(pagetable_t pagetable, size_t start, size_t end, 
     paging_map_page(pagetable, addr, addr, flags);
 }
 
-void paging_print_pagetable(pagetable_t pagetable, int level, size_t va_base) {
+void paging_print_pagetable(const pagetable_t pagetable, int level, size_t va_base) {
   size_t region_size = 1 << (12 + level * 9);
   
   for (int i = 0; i < PAGETABLE_ENTRIES; i++) {
@@ -65,4 +56,16 @@ void paging_print_pagetable(pagetable_t pagetable, int level, size_t va_base) {
         paging_print_pagetable((pagetable_t)pa, level - 1, va);
     }
   }
+}
+
+void* paging_alloc(size_t n) {
+  static void* next = &_heap_start;
+  void* addr = next;
+  memset(addr, 0, n * PAGE_SIZE);
+  next += n * PAGE_SIZE;
+  return addr;
+}
+
+void* kmalloc(size_t size) {
+  return paging_alloc(align_up(size, PAGE_SIZE) / PAGE_SIZE);
 }
